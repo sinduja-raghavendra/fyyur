@@ -110,8 +110,6 @@ def index():
 
 @app.route('/venues')
 def venues():
-    # TODO: replace with real venues data.
-    #       num_shows should be aggregated based on number of upcoming shows per venue.
     cities = Venue.query.distinct('city').all()
     data = []
     for city in cities:
@@ -253,17 +251,24 @@ def artists():
 
 @app.route('/artists/search', methods=['POST'])
 def search_artists():
-    # TODO: implement search on artists with partial string search. Ensure it is case-insensitive.
-    # seach for "A" should return "Guns N Petals", "Matt Quevado", and "The Wild Sax Band".
-    # search for "band" should return "The Wild Sax Band".
+    search_artist = request.form.get('search_term')
+    artists = Artist.query.filter(Artist.name.ilike('%'+search_artist+'%'))
+    data = []
+    for artist in artists:
+      num_upcoming_shows = 0
+      shows = Show.query.filter_by(artist_id=artist.id).all()
+      for sh in shows:
+        if (sh.start_time > datetime.today()):
+          num_upcoming_shows += 1
+      values = {}
+      values['id'] = artist.id
+      values['name'] = artist.name
+      values['num_upcoming_shows'] = num_upcoming_shows
+      data.append(values.copy())
     response = {
-        "count": 1,
-        "data": [{
-            "id": 4,
-            "name": "Guns N Petals",
-            "num_upcoming_shows": 0,
-        }]
+        "count": len(data)
     }
+    response["data"] = data
     return render_template('pages/search_artists.html', results=response, search_term=request.form.get('search_term', ''))
 
 
