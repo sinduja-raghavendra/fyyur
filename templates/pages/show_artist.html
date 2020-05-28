@@ -30,7 +30,7 @@
 		<div class="seeking">
 			<p class="lead">Currently seeking performance venues</p>
 			<div class="description">
-				<i class="fas fa-quote-left"></i> {{ artist.seeking_description }} <i class="fas fa-quote-right"></i>
+				<i class="fas fa-quote-left"></i> {% if artist.seeking_description == ""  %} No description {% else %} {{ artist.seeking_description }} {% endif %} <i class="fas fa-quote-right"></i>
 			</div>
 		</div>
 		{% else %}	
@@ -40,7 +40,7 @@
 		{% endif %}
 	</div>
 	<div class="col-sm-6">
-		<img src="{{ artist.image_link }}" alt="Venue Image" />
+		<img src="{{ artist.image_link }}" alt="Artist Image" />
 	</div>
 </div>
 <section>

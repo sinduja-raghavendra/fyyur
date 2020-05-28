@@ -33,7 +33,7 @@
 		<div class="seeking">
 			<p class="lead">Currently seeking talent</p>
 			<div class="description">
-				<i class="fas fa-quote-left"></i> {{ venue.seeking_description }} <i class="fas fa-quote-right"></i>
+				<i class="fas fa-quote-left"></i>  {% if venue.seeking_description == ""  %} No description {% else %} {{ venue.seeking_description }} {% endif %} <i class="fas fa-quote-right"></i>
 			</div>
 		</div>
 		{% else %}	
