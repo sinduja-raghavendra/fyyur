@@ -84,7 +84,7 @@ genres_choices = [
 class VenueForm(FlaskForm):
 
     def validate_phone(self, form, field):
-        if not re.search(r"^[0-9]{3}-[0-9]{3}-[0-9]{4}$", field.data):
+        if not re.search(r"^[0-9]{3}[0-9]{3}[0-9]{4}$", field.data):
             raise ValidationError("Invalid phone number.")
 
     def validate_genres(self, form, field):
@@ -132,7 +132,7 @@ class VenueForm(FlaskForm):
 class ArtistForm(FlaskForm):
 
     def validate_phone(self, form, field):
-        if not re.search(r"^[0-9]{3}-[0-9]{3}-[0-9]{4}$", field.data):
+        if not re.search(r"^[0-9]{3}[0-9]{3}[0-9]{4}$", field.data):
             raise ValidationError("Invalid phone number.")
     
     def validate_genres(self, form, field):

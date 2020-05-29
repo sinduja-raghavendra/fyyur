@@ -223,6 +223,8 @@ def create_venue_submission():
     error=False
     try:
         name = request.form['name']
+        VenueForm().validate_phone(VenueForm, VenueForm().phone)
+        VenueForm().validate_genres(VenueForm, VenueForm().genres)
         city = request.form['city']
         state= request.form['state']
         address= request.form['address']
@@ -241,11 +243,11 @@ def create_venue_submission():
         facebook_link=facebook_link, seeking_description=seeking_description, seeking_talent=seeking_talent, website=website )
         db.session.add(venue)
         db.session.commit()
-    except:
+    except Exception as e:
         error=True
         db.session.rollback()
         print(sys.exc_info())
-        flash('An error occurred. Venue ' + name + ' could not be listed.')
+        flash('An error occurred. Venue ' + name + ' could not be listed due to ' + str(e))
     finally:
         db.session.close()
     if not error:
@@ -349,29 +351,71 @@ def show_artist(artist_id):
 
 @app.route('/artists/<int:artist_id>/edit', methods=['GET'])
 def edit_artist(artist_id):
-    form = ArtistForm()
-    artist = {
-        "id": 4,
-        "name": "Guns N Petals",
-        "genres": ["Rock n Roll"],
-        "city": "San Francisco",
-        "state": "CA",
-        "phone": "326-123-5000",
-        "website": "https://www.gunsnpetalsband.com",
-        "facebook_link": "https://www.facebook.com/GunsNPetals",
-        "seeking_venue": True,
-        "seeking_description": "Looking for shows to perform at in the San Francisco Bay Area!",
-        "image_link": "https://images.unsplash.com/photo-1549213783-8284d0336c4f?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=300&q=80"
-    }
-    # TODO: populate form with fields from artist with ID <artist_id>
+    try:
+        form = ArtistForm()
+        artistList = Artist.query.filter_by(id=artist_id).one_or_none()
+        if artistList is None:
+            abort(404)
+        artist = {
+            "id": artistList.id,
+            "name": artistList.name
+        }
+        form.name.data = artistList.name
+        form.genres.data = artistList.genres
+        form.city.data = artistList.city
+        form.state.data = artistList.state
+        form.phone.data = artistList.phone
+        form.website.data = artistList.website
+        form.facebook_link.data = artistList.facebook_link
+        form.seeking_venue.data = artistList.seeking_venue
+        form.seeking_description.data = artistList.seeking_description
+        form.image_link.data = artistList.image_link
+    except:
+        abort(404)
     return render_template('forms/edit_artist.html', form=form, artist=artist)
 
 
 @app.route('/artists/<int:artist_id>/edit', methods=['POST'])
 def edit_artist_submission(artist_id):
-    # TODO: take values from the form submitted, and update existing
-    # artist record with ID <artist_id> using the new attributes
-
+    error=False
+    try:
+        name = request.form['name']
+        ArtistForm().validate_phone(ArtistForm, ArtistForm().phone)
+        ArtistForm().validate_genres(ArtistForm, ArtistForm().genres)
+        city = request.form['city']
+        state= request.form['state']
+        phone = request.form['phone']
+        genres = request.form.getlist('genres')
+        seeking_venue_exist = request.form.get('seeking_venue', None)
+        if seeking_venue_exist is None:
+          seeking_venue = False
+        else:
+          seeking_venue = True
+        seeking_description = request.form['seeking_description'] 
+        image_link = request.form['image_link']
+        website = request.form['website']
+        facebook_link = request.form['facebook_link']
+        artist = Artist.query.get(artist_id)
+        artist.name = name
+        artist.city = city
+        artist.state = state
+        artist.phone = phone
+        artist.genres = genres
+        artist.seeking_venue = seeking_venue
+        artist.seeking_description = seeking_description
+        artist.image_link = image_link
+        artist.website = website
+        artist.facebook_link = facebook_link
+        db.session.commit()
+    except Exception as e:
+        error=True
+        db.session.rollback()
+        print(sys.exc_info())
+        flash('An error occurred. Artist ' + name + ' could not be edited due to ' + str(e))
+    finally:
+        db.session.close()
+    if not error:
+        flash('Artist ' + name + ' was successfully edited!')
     return redirect(url_for('show_artist', artist_id=artist_id))
 
 
@@ -417,6 +461,8 @@ def create_artist_submission():
     error=False
     try:
         name = request.form['name']
+        ArtistForm().validate_phone(ArtistForm, ArtistForm().phone)
+        ArtistForm().validate_genres(ArtistForm, ArtistForm().genres)
         city = request.form['city']
         state= request.form['state']
         phone = request.form['phone']
@@ -434,11 +480,11 @@ def create_artist_submission():
         facebook_link=facebook_link, seeking_description=seeking_description, seeking_venue=seeking_venue, website=website )
         db.session.add(artist)
         db.session.commit()
-    except:
+    except Exception as e:
         error=True
         db.session.rollback()
         print(sys.exc_info())
-        flash('An error occurred. Artist ' + name + ' could not be listed.')
+        flash('An error occurred. Artist ' + name + ' could not be listed due to ' + str(e))
     finally:
         db.session.close()
     if not error:
