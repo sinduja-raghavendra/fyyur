@@ -24,19 +24,22 @@
 			<i class="fas fa-phone-alt"></i> {% if venue.phone %}{{ venue.phone }}{% else %}No Phone{% endif %}
 		</p>
 		<p>
-			<i class="fas fa-link"></i> {% if venue.website %}<a href="{{ venue.website }}" target="_blank">{{ venue.website }}</a>{% else %}No Website{% endif %}
+			<i class="fas fa-link"></i> {% if venue.website %}<a href="{{ venue.website }}"
+				target="_blank">{{ venue.website }}</a>{% else %}No Website{% endif %}
 		</p>
 		<p>
-			<i class="fab fa-facebook-f"></i> {% if venue.facebook_link %}<a href="{{ venue.facebook_link }}" target="_blank">{{ venue.facebook_link }}</a>{% else %}No Facebook Link{% endif %}
+			<i class="fab fa-facebook-f"></i> {% if venue.facebook_link %}<a href="{{ venue.facebook_link }}"
+				target="_blank">{{ venue.facebook_link }}</a>{% else %}No Facebook Link{% endif %}
 		</p>
 		{% if venue.seeking_talent %}
 		<div class="seeking">
 			<p class="lead">Currently seeking talent</p>
 			<div class="description">
-				<i class="fas fa-quote-left"></i>  {% if venue.seeking_description == ""  %} No description {% else %} {{ venue.seeking_description }} {% endif %} <i class="fas fa-quote-right"></i>
+				<i class="fas fa-quote-left"></i> {% if venue.seeking_description == ""  %} No description {% else %}
+				{{ venue.seeking_description }} {% endif %} <i class="fas fa-quote-right"></i>
 			</div>
 		</div>
-		{% else %}	
+		{% else %}
 		<p class="not-seeking">
 			<i class="fas fa-moon"></i> Not currently seeking talent
 		</p>
@@ -48,13 +51,19 @@
 </div>
 <br />
 <div class="row">
-  <div class="col-sm-6">
-    <a href="{{ url_for('edit_venue', venue_id=venue.id) }}"
-       class="btn btn-primary btn-sm btn-block">Edit Venue</a>
-  </div>
+	<div class="col-sm-6">
+		<a href="{{ url_for('edit_venue', venue_id=venue.id) }}" class="btn btn-primary btn-sm btn-block">Edit Venue</a>
+	</div>
+</div>
+<br />
+<div class="row">
+	<div class="col-sm-6">
+		<button type="button" class="btn btn-primary btn-sm btn-block delete-venue" data-id="{{ venue.id }}">Delete</button>		
+	</div>
 </div>
 <section>
-	<h2 class="monospace">{{ venue.upcoming_shows_count }} Upcoming {% if venue.upcoming_shows_count == 1 %}Show{% else %}Shows{% endif %}</h2>
+	<h2 class="monospace">{{ venue.upcoming_shows_count }} Upcoming
+		{% if venue.upcoming_shows_count == 1 %}Show{% else %}Shows{% endif %}</h2>
 	<div class="row">
 		{%for show in venue.upcoming_shows %}
 		<div class="col-sm-4">
@@ -68,7 +77,8 @@
 	</div>
 </section>
 <section>
-	<h2 class="monospace">{{ venue.past_shows_count }} Past {% if venue.past_shows_count == 1 %}Show{% else %}Shows{% endif %}</h2>
+	<h2 class="monospace">{{ venue.past_shows_count }} Past
+		{% if venue.past_shows_count == 1 %}Show{% else %}Shows{% endif %}</h2>
 	<div class="row">
 		{%for show in venue.past_shows %}
 		<div class="col-sm-4">
@@ -81,6 +91,19 @@
 		{% endfor %}
 	</div>
 </section>
-
+<script>
+	const deleteVenueButton = document.querySelector('.delete-venue');
+	deleteVenueButton.onclick = e => {
+		const venueId = e.target.dataset['id'];
+		fetch(`/venues/${venueId}`, {
+			method: 'DELETE',
+			redirect: 'follow'
+		})
+		.then(response => {
+			if (response.redirected) {
+				window.location.href = response.url;
+			}
+		})
+	}
+</script>
 {% endblock %}
-
