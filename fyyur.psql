@@ -1,0 +1,309 @@
+--
+-- PostgreSQL database dump
+--
+
+-- Dumped from database version 12.2
+-- Dumped by pg_dump version 12.2
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET idle_in_transaction_session_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SELECT pg_catalog.set_config('search_path', '', false);
+SET check_function_bodies = false;
+SET xmloption = content;
+SET client_min_messages = warning;
+SET row_security = off;
+
+SET default_tablespace = '';
+
+SET default_table_access_method = heap;
+
+--
+-- Name: Artist; Type: TABLE; Schema: public; Owner: ragu
+--
+
+CREATE TABLE public."Artist" (
+    id integer NOT NULL,
+    name character varying NOT NULL,
+    city character varying(120) NOT NULL,
+    state character varying(120) NOT NULL,
+    phone character varying(120) NOT NULL,
+    genres character varying[] NOT NULL,
+    image_link character varying(500) NOT NULL,
+    facebook_link character varying(120),
+    seeking_description character varying(120),
+    seeking_venue boolean NOT NULL,
+    website character varying(120)
+);
+
+
+ALTER TABLE public."Artist" OWNER TO ragu;
+
+--
+-- Name: Artist_id_seq; Type: SEQUENCE; Schema: public; Owner: ragu
+--
+
+CREATE SEQUENCE public."Artist_id_seq"
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public."Artist_id_seq" OWNER TO ragu;
+
+--
+-- Name: Artist_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: ragu
+--
+
+ALTER SEQUENCE public."Artist_id_seq" OWNED BY public."Artist".id;
+
+
+--
+-- Name: Show; Type: TABLE; Schema: public; Owner: ragu
+--
+
+CREATE TABLE public."Show" (
+    id integer NOT NULL,
+    start_time timestamp without time zone NOT NULL,
+    artist_id integer NOT NULL,
+    venue_id integer NOT NULL
+);
+
+
+ALTER TABLE public."Show" OWNER TO ragu;
+
+--
+-- Name: Show_id_seq; Type: SEQUENCE; Schema: public; Owner: ragu
+--
+
+CREATE SEQUENCE public."Show_id_seq"
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public."Show_id_seq" OWNER TO ragu;
+
+--
+-- Name: Show_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: ragu
+--
+
+ALTER SEQUENCE public."Show_id_seq" OWNED BY public."Show".id;
+
+
+--
+-- Name: Venue; Type: TABLE; Schema: public; Owner: ragu
+--
+
+CREATE TABLE public."Venue" (
+    id integer NOT NULL,
+    name character varying NOT NULL,
+    city character varying(120) NOT NULL,
+    state character varying(120) NOT NULL,
+    address character varying(120) NOT NULL,
+    phone character varying(120) NOT NULL,
+    image_link character varying(500) NOT NULL,
+    facebook_link character varying(120) NOT NULL,
+    seeking_description character varying(120),
+    seeking_talent boolean NOT NULL,
+    website character varying(120),
+    genres character varying[] NOT NULL
+);
+
+
+ALTER TABLE public."Venue" OWNER TO ragu;
+
+--
+-- Name: Venue_id_seq; Type: SEQUENCE; Schema: public; Owner: ragu
+--
+
+CREATE SEQUENCE public."Venue_id_seq"
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public."Venue_id_seq" OWNER TO ragu;
+
+--
+-- Name: Venue_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: ragu
+--
+
+ALTER SEQUENCE public."Venue_id_seq" OWNED BY public."Venue".id;
+
+
+--
+-- Name: alembic_version; Type: TABLE; Schema: public; Owner: ragu
+--
+
+CREATE TABLE public.alembic_version (
+    version_num character varying(32) NOT NULL
+);
+
+
+ALTER TABLE public.alembic_version OWNER TO ragu;
+
+--
+-- Name: Artist id; Type: DEFAULT; Schema: public; Owner: ragu
+--
+
+ALTER TABLE ONLY public."Artist" ALTER COLUMN id SET DEFAULT nextval('public."Artist_id_seq"'::regclass);
+
+
+--
+-- Name: Show id; Type: DEFAULT; Schema: public; Owner: ragu
+--
+
+ALTER TABLE ONLY public."Show" ALTER COLUMN id SET DEFAULT nextval('public."Show_id_seq"'::regclass);
+
+
+--
+-- Name: Venue id; Type: DEFAULT; Schema: public; Owner: ragu
+--
+
+ALTER TABLE ONLY public."Venue" ALTER COLUMN id SET DEFAULT nextval('public."Venue_id_seq"'::regclass);
+
+
+--
+-- Data for Name: Artist; Type: TABLE DATA; Schema: public; Owner: ragu
+--
+
+COPY public."Artist" (id, name, city, state, phone, genres, image_link, facebook_link, seeking_description, seeking_venue, website) FROM stdin;
+2	Matt Quevedo	New York	NY	300-400-5000	{Jazz}	https://images.unsplash.com/photo-1495223153807-b916f75de8c5?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=334&q=80	https://www.facebook.com/mattquevedo923251523	\N	f	\N
+3	The Wild Sax Band	San Francisco	CA	432-325-5432	{Jazz,Classical}	https://images.unsplash.com/photo-1558369981-f9ca78462e61?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=794&q=80	\N	\N	f	\N
+1	Guns N Petals	San Francisco	CA	326-123-5000	{"Rock n Roll"}	https://images.unsplash.com/photo-1549213783-8284d0336c4f?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=300&q=80	https://www.facebook.com/GunsNPetals	Looking for shows to perform at in the San Francisco Bay Area!	t	https://www.gunsnpetalsband.com
+19	Sindu	San Jose	CA	946961	{Classical,Country}	https://images.unsplash.com/photo-1490730141103-6cac27aaab94?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1050&q=80		Actively looking for shows	t	no
+21	Band O Band	San Jose	CA	6463737333	{Alternative,Blues,Classical,Country,Electronic}	https://images.unsplash.com/photo-1503023345310-bd7c1de61c7d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=701&q=80		Actively looking for shows	t	
+17	The G one	San Jose	CA	0986571324	{Country}	https://www.itl.cat/pngfile/big/30-303191_background-images-for-editing-editing-pictures-background-background.jpg	http://face-book-2387.com	Actively looking for shows	t	www.dummywebsite.com
+18	Artistic	San Jose	CA	0964859876	{Alternative}	https://image.shutterstock.com/image-photo/beautiful-water-drop-on-dandelion-260nw-789676552.jpg			t	
+20	Art O	San Jose	CA	9639873546	{Alternative,Electronic}	https://images.unsplash.com/photo-1503023345310-bd7c1de61c7d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=701&q=80	http://face-book-837.com	Actively looking for shows	t	www.dummywebsite24.com
+22	Artist 25	San Jose	CA	1237659807	{Alternative,Blues,Classical}	https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcSEFKsbzLEdAKzEftmhvFNP_PRXliYB8_O0OOj9yAwtGFWGcxeN&usqp=CAU	http://www.facebook-23987.com	Looking for Shows	t	http://www.dummywebsite836.com
+\.
+
+
+--
+-- Data for Name: Show; Type: TABLE DATA; Schema: public; Owner: ragu
+--
+
+COPY public."Show" (id, start_time, artist_id, venue_id) FROM stdin;
+1	2019-05-21 21:30:00	1	1
+2	2019-06-15 23:00:00	2	3
+3	2035-04-01 20:00:00	3	3
+4	2035-04-08 20:00:00	3	3
+5	2035-04-15 20:00:00	3	3
+6	2020-05-28 01:50:32	17	5
+8	2025-05-28 01:50:32	20	1
+9	2020-05-28 01:50:32	17	1
+\.
+
+
+--
+-- Data for Name: Venue; Type: TABLE DATA; Schema: public; Owner: ragu
+--
+
+COPY public."Venue" (id, name, city, state, address, phone, image_link, facebook_link, seeking_description, seeking_talent, website, genres) FROM stdin;
+5	Venue2	San Jose	CA	Albany Drive Apt 91387	946	https://images.unsplash.com/photo-1503023345310-bd7c1de61c7d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=701&q=80	http://face-book-2387.com	Actively looking for Talents	t	www.dummywebsite.com	{Blues}
+6	venue3	San Jose	CA	Albany Drive Apt 9387	8127938	https://images.unsplash.com/photo-1503023345310-bd7c1de61c7d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=701&q=80			t		{Alternative,Blues,Classical,Country}
+22	Venue6	San Jose	CA	Albany 7865	1237869078	https://lh3.googleusercontent.com/proxy/pBwqbi8F7Nxdd7jIHIlGDGoqk_i8tu-O76KxNRCnYwXe7PHS_muPyfhFE1I6NpTfzZyKccsFonwQQKoLtFpSenOTlzP5ylI4qt48ZrzuXVOeA0ZBTQo	http://www.facebook-2374.com	Looking for Talents	t	www.dummyWebsite24.com	{Blues,Classical}
+8	Musical Palace	Santa Clara	CA	Albany apt A982734	1234567891	https://images.unsplash.com/photo-1503023345310-bd7c1de61c7d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=701&q=80	http://face-book-765.com	Actively looking for shows1	t	www.dummyVenuewebsite.com	{Alternative,Classical,Country}
+1	The Musical Hop	San Francisco	CA	1015 Folsom Street	123-123-1234	https://images.unsplash.com/photo-1543900694-133f37abaaa5?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=400&q=60	https://www.facebook.com/TheMusicalHop	We are on the lookout for a local artist to play every two weeks. Please call us.	t	https://www.themusicalhop.com	{Jazz,Reggae,Swing,Classical,Folk}
+2	The Dueling Pianos Bar	New York	NY	335 Delancey Street	914-003-1132	https://images.unsplash.com/photo-1497032205916-ac775f0649ae?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=750&q=80	https://www.facebook.com/theduelingpianos	\N	f	https://www.theduelingpianos.com	{Classical,R&B,Hip-Hop}
+3	Park Square Live Music & Coffee	San Francisco	CA	34 Whiskey Moore Ave	415-000-1234	https://images.unsplash.com/photo-1485686531765-ba63b07845a7?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=747&q=80	https://www.facebook.com/ParkSquareLiveMusicAndCoffee	\N	f	https://www.parksquarelivemusicandcoffee.com	{"Rock n Roll",Jazz,Classical,Folk}
+4	Venue1	San Jose	CA	Albany Drive Apt 2387	961	https://images.unsplash.com/photo-1503023345310-bd7c1de61c7d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=701&q=80			f		{Alternative,Blues,Classical,Country,Electronic}
+23	artist 29	San Jose	CA	Albany Apt 374659	1239874567	https://gameranx.com/wp-content/uploads/2019/08/Animal-Crossing-New-Horizons-1080P-Wallpaper-2-1024x576.jpg	http://www.facebook-9848.com	Looking for Talents	t	http://www.dummywebsite-387.com	{Alternative,Blues,Classical}
+\.
+
+
+--
+-- Data for Name: alembic_version; Type: TABLE DATA; Schema: public; Owner: ragu
+--
+
+COPY public.alembic_version (version_num) FROM stdin;
+e61812d5a17b
+\.
+
+
+--
+-- Name: Artist_id_seq; Type: SEQUENCE SET; Schema: public; Owner: ragu
+--
+
+SELECT pg_catalog.setval('public."Artist_id_seq"', 22, true);
+
+
+--
+-- Name: Show_id_seq; Type: SEQUENCE SET; Schema: public; Owner: ragu
+--
+
+SELECT pg_catalog.setval('public."Show_id_seq"', 11, true);
+
+
+--
+-- Name: Venue_id_seq; Type: SEQUENCE SET; Schema: public; Owner: ragu
+--
+
+SELECT pg_catalog.setval('public."Venue_id_seq"', 23, true);
+
+
+--
+-- Name: Artist Artist_pkey; Type: CONSTRAINT; Schema: public; Owner: ragu
+--
+
+ALTER TABLE ONLY public."Artist"
+    ADD CONSTRAINT "Artist_pkey" PRIMARY KEY (id);
+
+
+--
+-- Name: Show Show_pkey; Type: CONSTRAINT; Schema: public; Owner: ragu
+--
+
+ALTER TABLE ONLY public."Show"
+    ADD CONSTRAINT "Show_pkey" PRIMARY KEY (id);
+
+
+--
+-- Name: Venue Venue_pkey; Type: CONSTRAINT; Schema: public; Owner: ragu
+--
+
+ALTER TABLE ONLY public."Venue"
+    ADD CONSTRAINT "Venue_pkey" PRIMARY KEY (id);
+
+
+--
+-- Name: alembic_version alembic_version_pkc; Type: CONSTRAINT; Schema: public; Owner: ragu
+--
+
+ALTER TABLE ONLY public.alembic_version
+    ADD CONSTRAINT alembic_version_pkc PRIMARY KEY (version_num);
+
+
+--
+-- Name: Show Show_artist_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: ragu
+--
+
+ALTER TABLE ONLY public."Show"
+    ADD CONSTRAINT "Show_artist_id_fkey" FOREIGN KEY (artist_id) REFERENCES public."Artist"(id);
+
+
+--
+-- Name: Show Show_venue_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: ragu
+--
+
+ALTER TABLE ONLY public."Show"
+    ADD CONSTRAINT "Show_venue_id_fkey" FOREIGN KEY (venue_id) REFERENCES public."Venue"(id);
+
+
+--
+-- PostgreSQL database dump complete
+--
+
